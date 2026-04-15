@@ -14,16 +14,21 @@ const API = "https://ai-network-1.onrender.com";
 async function go(){
   const q = document.getElementById("q").value;
 
-  const res = await fetch(API + "/search", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({query:q})
-  });
+  try {
+    const res = await fetch(API + "/search", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({query:q})
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  document.getElementById("r").innerHTML =
-    data.results.map(x=>`<p>${x.model}: ${x.answer} (${x.score.toFixed(2)})</p>`).join("");
+    document.getElementById("r").innerText =
+      data.answer || JSON.stringify(data);
+
+  } catch(e){
+    document.getElementById("r").innerText = "Error: " + e.message;
+  }
 }
 </script>
 
