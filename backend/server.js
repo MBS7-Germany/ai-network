@@ -17,18 +17,33 @@ app.get("/leaderboard", (req, res) => {
   res.json(leaderboard);
 });
 
-app.post("/search", (req, res) => {
+app.post("/search", async (req, res) => {
   const { query } = req.body;
 
-  const results = applicants.map((a, i) => ({
-    model: a.model || "Model " + i,
-    answer: "Antwort für: " + query,
-    score: Math.random() * 100
-  }));
+  const fakeResults = [
+    {
+      model: "GPT-like",
+      answer: "Antwort auf: " + query,
+      score: Math.random()
+    },
+    {
+      model: "DeepSearch",
+      answer: "Ich denke das bedeutet: " + query,
+      score: Math.random()
+    },
+    {
+      model: "FastAI",
+      answer: "Kurze Antwort: " + query,
+      score: Math.random()
+    }
+  ];
 
-  leaderboard = results.sort((a,b)=>b.score-a.score);
+  // Ranking
+  fakeResults.sort((a, b) => b.score - a.score);
 
-  res.json({ results: leaderboard });
+  res.json({
+    results: fakeResults
+  });
 });
 
 app.listen(process.env.PORT || 5000);
