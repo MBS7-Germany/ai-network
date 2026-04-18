@@ -36,6 +36,7 @@ app.get("/leaderboard", (req, res) => {
     });
 
     const d1 = await r1.json();
+    console.log("DEBUG 1:", d1);
 
     // OpenAI Request 2 (leicht anders formuliert)
     const r2 = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -54,6 +55,7 @@ app.get("/leaderboard", (req, res) => {
     });
 
     const d2 = await r2.json();
+    console.log("DEBUG 2:", d2);
 
     const results = [
       {
