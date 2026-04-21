@@ -8,76 +8,67 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: radial-gradient(circle at center, #0f172a, #020617);
+  background: #f0f2f5; /* Facebook Style */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  color: white;
 }
 
 /* HEADER */
 .title {
-  font-size: 70px;
-  color: #4da3ff;
-  margin-bottom: 60px;
-  text-shadow: 0 0 20px rgba(77,163,255,0.8);
+  font-size: 60px;
+  color: #1877f2;
+  margin-bottom: 50px;
+  font-weight: bold;
 }
 
-/* GRID */
+/* HEX GRID */
 .honeycomb {
   display: grid;
-  grid-template-columns: repeat(3, 220px);
+  grid-template-columns: repeat(3, 200px);
   gap: 20px;
-  justify-content: center;
 }
 
-/* HEX WRAPPER */
+/* HEX */
 .hex-wrapper {
   position: relative;
-  width: 220px;
-  height: 130px;
+  width: 200px;
+  height: 120px;
 }
 
-/* GLOW BORDER */
 .hex-border {
   width: 100%;
   height: 100%;
-  background: #2d6cdf;
+  background: #1877f2;
   clip-path: polygon(
     25% 0%, 75% 0%,
     100% 50%, 75% 100%,
     25% 100%, 0% 50%
   );
-  position: absolute;
-  filter: drop-shadow(0 0 10px #2d6cdf)
-          drop-shadow(0 0 20px #2d6cdf);
 }
 
-/* INNER HEX */
 .hexagon {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  width: calc(100% - 12px);
-  height: calc(100% - 12px);
-  background: #0f172a;
+  top: 5px;
+  left: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  background: white;
   clip-path: polygon(
     25% 0%, 75% 0%,
     100% 50%, 75% 100%,
     25% 100%, 0% 50%
   );
-
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* CENTER BIG HEX */
+/* CENTER BIG */
 .center {
-  transform: scale(1.5);
-  z-index: 2;
+  transform: scale(1.4);
 }
 
 /* SEARCH */
@@ -88,40 +79,37 @@ body {
 
 input {
   flex: 1;
-  padding: 8px;
-  border: none;
-  outline: none;
-  background: #020617;
-  color: white;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 6px 0 0 6px;
 }
 
 button {
-  padding: 8px 12px;
+  padding: 10px 15px;
   border: none;
-  background: #2d6cdf;
+  background: #1877f2;
   color: white;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
+  font-weight: bold;
 }
 
 button:hover {
-  background: #4da3ff;
+  background: #166fe5;
 }
 
 /* RESULTS */
 .results {
   width: 400px;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .card {
-  background: #0f172a;
+  background: white;
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 10px;
-  border: 1px solid #2d6cdf;
-  box-shadow: 0 0 10px rgba(45,108,223,0.5);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -132,46 +120,24 @@ button:hover {
 
 <div class="honeycomb">
 
-  <!-- oben links -->
-  <div class="hex-wrapper">
-    <div class="hex-border"></div>
-    <div class="hexagon"></div>
-  </div>
+  <div class="hex-wrapper"><div class="hex-border"></div><div class="hexagon"></div></div>
+  <div class="hex-wrapper"><div class="hex-border"></div><div class="hexagon"></div></div>
+  <div class="hex-wrapper"><div class="hex-border"></div><div class="hexagon"></div></div>
 
-  <!-- oben mitte -->
-  <div class="hex-wrapper">
-    <div class="hex-border"></div>
-    <div class="hexagon"></div>
-  </div>
+  <div class="hex-wrapper"><div class="hex-border"></div><div class="hexagon"></div></div>
 
-  <!-- oben rechts -->
-  <div class="hex-wrapper">
-    <div class="hex-border"></div>
-    <div class="hexagon"></div>
-  </div>
-
-  <!-- mitte links -->
-  <div class="hex-wrapper">
-    <div class="hex-border"></div>
-    <div class="hexagon"></div>
-  </div>
-
-  <!-- MITTE (HAUPT WABE) -->
+  <!-- CENTER -->
   <div class="hex-wrapper center">
     <div class="hex-border"></div>
     <div class="hexagon">
       <div class="search-box">
         <input id="query" placeholder="Was willst du wissen?">
-        <button onclick="search()">Go</button>
+        <button onclick="search()">Search</button>
       </div>
     </div>
   </div>
 
-  <!-- mitte rechts -->
-  <div class="hex-wrapper">
-    <div class="hex-border"></div>
-    <div class="hexagon"></div>
-  </div>
+  <div class="hex-wrapper"><div class="hex-border"></div><div class="hexagon"></div></div>
 
 </div>
 
@@ -181,27 +147,32 @@ button:hover {
 async function search() {
   const query = document.getElementById("query").value;
 
-  const res = await fetch("https://ai-network-1.onrender.com/search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ query })
-  });
+  try {
+    const res = await fetch("https://ai-network-1.onrender.com/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ query })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
 
-  data.results.forEach((r, i) => {
-    resultsDiv.innerHTML += `
-      <div class="card">
-        <strong>${i + 1}. ${r.model}</strong>
-        <p>${r.answer}</p>
-      </div>
-    `;
-  });
+    data.results.forEach((r, i) => {
+      resultsDiv.innerHTML += `
+        <div class="card">
+          <strong>${i + 1}. ${r.model}</strong>
+          <p>${r.answer}</p>
+        </div>
+      `;
+    });
+
+  } catch(e) {
+    document.getElementById("results").innerText = "Fehler: " + e.message;
+  }
 }
 </script>
 
