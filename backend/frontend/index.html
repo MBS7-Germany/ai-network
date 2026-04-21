@@ -1,36 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Network</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* HEADER */
+    h1 {
+      color: #2d6cdf;
+      margin-bottom: 40px;
+    }
+
+    /* HEXAGON */
+    .hexagon {
+      position: relative;
+      width: 400px;
+      height: 230px;
+      background: white;
+      margin: 50px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* obere & untere Seiten */
+    .hexagon:before,
+    .hexagon:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      border-left: 200px solid transparent;
+      border-right: 200px solid transparent;
+    }
+
+    .hexagon:before {
+      bottom: 100%;
+      border-bottom: 115px solid white;
+    }
+
+    .hexagon:after {
+      top: 100%;
+      border-top: 115px solid white;
+    }
+
+    /* BLAUER RAHMEN */
+    .hex-border {
+      position: absolute;
+      width: 440px;
+      height: 260px;
+      background: #2d6cdf;
+      z-index: -1;
+    }
+
+    .hex-border:before,
+    .hex-border:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      border-left: 220px solid transparent;
+      border-right: 220px solid transparent;
+    }
+
+    .hex-border:before {
+      bottom: 100%;
+      border-bottom: 130px solid #2d6cdf;
+    }
+
+    .hex-border:after {
+      top: 100%;
+      border-top: 130px solid #2d6cdf;
+    }
+
+    /* SUCHLEISTE */
+    .search-box {
+      display: flex;
+      width: 80%;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      outline: none;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      background: #2d6cdf;
+      color: white;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e4fbf;
+    }
+
+    /* ERGEBNISSE */
+    .results {
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+  </style>
+</head>
+
 <body>
-<h1>AI Network</h1>
 
-<input id="q" placeholder="Search..." />
-<button onclick="go()">Search</button>
+  <h1>AI Network</h1>
 
-<div id="r"></div>
+  <div class="hex-border"></div>
 
-<script>
-const API = "https://ai-network-1.onrender.com";
+  <div class="hexagon">
+    <div class="search-box">
+      <input id="query" placeholder="Was willst du wissen?">
+      <button onclick="search()">Search</button>
+    </div>
+  </div>
 
-async function go(){
-  const q = document.getElementById("q").value;
+  <div class="results" id="results"></div>
 
-  try {
-    const res = await fetch(API + "/search", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({query:q})
-    });
+  <script>
+    async function search() {
+      const query = document.getElementById("query").value;
 
-    const data = await res.json();
+      const res = await fetch("https://ai-network-1.onrender.com/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query })
+      });
 
-    document.getElementById("r").innerText =
-      data.answer || JSON.stringify(data);
+      const data = await res.json();
 
-  } catch(e){
-    document.getElementById("r").innerText = "Error: " + e.message;
-  }
-}
-</script>
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+
+      data.results.forEach((r, i) => {
+        resultsDiv.innerHTML += `
+          <div class="card">
+            <strong>${i + 1}. ${r.model}</strong>
+            <p>${r.answer}</p>
+          </div>
+        `;
+      });
+    }
+  </script>
 
 </body>
 </html>
