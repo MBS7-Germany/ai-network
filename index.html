@@ -17,49 +17,50 @@
     }
 
     /* HEADER */
-    h1 {
+    .title {
+      font-size: 60px;
       color: #2d6cdf;
-      margin-bottom: 40px;
+      margin-bottom: 60px;
+      letter-spacing: 2px;
     }
 
-    /* HEXAGON */
+    /* HEXAGON (RICHTIG GEDREHT) */
     .hexagon {
-      position: relative;
       width: 400px;
-      height: 230px;
+      height: 200px;
       background: white;
-      margin: 50px 0;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
-    /* obere & untere Seiten */
+    /* LINKS / RECHTS SPITZEN */
     .hexagon:before,
     .hexagon:after {
       content: "";
       position: absolute;
       width: 0;
-      border-left: 200px solid transparent;
-      border-right: 200px solid transparent;
+      border-top: 100px solid transparent;
+      border-bottom: 100px solid transparent;
     }
 
     .hexagon:before {
-      bottom: 100%;
-      border-bottom: 115px solid white;
+      left: -100px;
+      border-right: 100px solid white;
     }
 
     .hexagon:after {
-      top: 100%;
-      border-top: 115px solid white;
+      right: -100px;
+      border-left: 100px solid white;
     }
 
     /* BLAUER RAHMEN */
     .hex-border {
       position: absolute;
       width: 440px;
-      height: 260px;
+      height: 220px;
       background: #2d6cdf;
       z-index: -1;
     }
@@ -69,18 +70,18 @@
       content: "";
       position: absolute;
       width: 0;
-      border-left: 220px solid transparent;
-      border-right: 220px solid transparent;
+      border-top: 110px solid transparent;
+      border-bottom: 110px solid transparent;
     }
 
     .hex-border:before {
-      bottom: 100%;
-      border-bottom: 130px solid #2d6cdf;
+      left: -110px;
+      border-right: 110px solid #2d6cdf;
     }
 
     .hex-border:after {
-      top: 100%;
-      border-top: 130px solid #2d6cdf;
+      right: -110px;
+      border-left: 110px solid #2d6cdf;
     }
 
     /* SUCHLEISTE */
@@ -112,24 +113,23 @@
 
     /* ERGEBNISSE */
     .results {
-      width: 400px;
-      margin-top: 20px;
+      width: 420px;
+      margin-top: 30px;
     }
 
     .card {
       background: white;
       padding: 15px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-
   </style>
 </head>
 
 <body>
 
-  <h1>AI Network</h1>
+  <h1 class="title">AI Network</h1>
 
   <div class="hex-border"></div>
 
