@@ -1,3 +1,4 @@
+// Antworten sammeln
 const results = [
   {
     model: "OpenAI Normal",
@@ -9,24 +10,44 @@ const results = [
   }
 ];
 
-// 🔥 NEUES RANKING
-results.forEach(r => {
-  let score = 0;
+// 🔥 AI bewertet die Antworten
+const judge = await fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: "Bewerte welche Antwort besser ist. Antworte nur mit 1 oder 2."
+      },
+      {
+        role: "user",
+        content: `
+Frage: ${query}
 
-  const text = r.answer.toLowerCase();
+Antwort 1:
+${results[0].answer}
 
-  // kürzer = besser
-  score += Math.max(0, 200 - text.length);
+Antwort 2:
+${results[1].answer}
 
-  // gute Wörter = besser
-  if (text.includes("ist")) score += 20;
-  if (text.includes("bedeutet")) score += 20;
-
-  // schlechte Zeichen = schlechter
-  if (text.includes("...")) score -= 10;
-
-  r.score = score;
+Welche ist besser? (nur 1 oder 2)
+        `
+      }
+    ]
+  })
 });
+
+const judgeData = await judge.json();
+const decision = judgeData.choices?.[0]?.message?.content?.trim();
+
+// Scores setzen
+results[0].score = decision === "1" ? 1 : 0;
+results[1].score = decision === "2" ? 1 : 0;
 
 // sortieren
 results.sort((a, b) => b.score - a.score);
