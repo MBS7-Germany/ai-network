@@ -8,29 +8,39 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f7fb;
+  background: radial-gradient(circle at center, #0f172a, #020617);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  color: white;
 }
 
 /* HEADER */
 .title {
-  font-size: 60px;
-  color: #2d6cdf;
+  font-size: 70px;
+  color: #4da3ff;
   margin-bottom: 60px;
+  text-shadow: 0 0 20px rgba(77,163,255,0.8);
 }
 
-/* HEXAGON CONTAINER */
+/* GRID */
+.honeycomb {
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  gap: 20px;
+  justify-content: center;
+}
+
+/* HEX WRAPPER */
 .hex-wrapper {
   position: relative;
-  width: 420px;
-  height: 240px;
+  width: 220px;
+  height: 130px;
 }
 
-/* BLAUER RAHMEN */
+/* GLOW BORDER */
 .hex-border {
   width: 100%;
   height: 100%;
@@ -41,16 +51,18 @@ body {
     25% 100%, 0% 50%
   );
   position: absolute;
+  filter: drop-shadow(0 0 10px #2d6cdf)
+          drop-shadow(0 0 20px #2d6cdf);
 }
 
-/* INNERE WABE */
+/* INNER HEX */
 .hexagon {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
-  background: white;
+  top: 6px;
+  left: 6px;
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  background: #0f172a;
   clip-path: polygon(
     25% 0%, 75% 0%,
     100% 50%, 75% 100%,
@@ -62,45 +74,54 @@ body {
   justify-content: center;
 }
 
-/* SUCHLEISTE */
+/* CENTER BIG HEX */
+.center {
+  transform: scale(1.5);
+  z-index: 2;
+}
+
+/* SEARCH */
 .search-box {
   display: flex;
-  width: 80%;
+  width: 90%;
 }
 
 input {
   flex: 1;
-  padding: 12px;
+  padding: 8px;
   border: none;
-  border-radius: 8px 0 0 8px;
   outline: none;
+  background: #020617;
+  color: white;
+  border-radius: 6px 0 0 6px;
 }
 
 button {
-  padding: 12px 20px;
+  padding: 8px 12px;
   border: none;
   background: #2d6cdf;
   color: white;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 6px 6px 0;
   cursor: pointer;
 }
 
 button:hover {
-  background: #1e4fbf;
+  background: #4da3ff;
 }
 
-/* ERGEBNISSE */
+/* RESULTS */
 .results {
-  width: 420px;
-  margin-top: 30px;
+  width: 400px;
+  margin-top: 40px;
 }
 
 .card {
-  background: white;
+  background: #0f172a;
   padding: 15px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid #2d6cdf;
+  box-shadow: 0 0 10px rgba(45,108,223,0.5);
 }
 </style>
 </head>
@@ -109,15 +130,49 @@ button:hover {
 
 <h1 class="title">AI Network</h1>
 
-<div class="hex-wrapper">
-  <div class="hex-border"></div>
+<div class="honeycomb">
 
-  <div class="hexagon">
-    <div class="search-box">
-      <input id="query" placeholder="Was willst du wissen?">
-      <button onclick="search()">Search</button>
+  <!-- oben links -->
+  <div class="hex-wrapper">
+    <div class="hex-border"></div>
+    <div class="hexagon"></div>
+  </div>
+
+  <!-- oben mitte -->
+  <div class="hex-wrapper">
+    <div class="hex-border"></div>
+    <div class="hexagon"></div>
+  </div>
+
+  <!-- oben rechts -->
+  <div class="hex-wrapper">
+    <div class="hex-border"></div>
+    <div class="hexagon"></div>
+  </div>
+
+  <!-- mitte links -->
+  <div class="hex-wrapper">
+    <div class="hex-border"></div>
+    <div class="hexagon"></div>
+  </div>
+
+  <!-- MITTE (HAUPT WABE) -->
+  <div class="hex-wrapper center">
+    <div class="hex-border"></div>
+    <div class="hexagon">
+      <div class="search-box">
+        <input id="query" placeholder="Was willst du wissen?">
+        <button onclick="search()">Go</button>
+      </div>
     </div>
   </div>
+
+  <!-- mitte rechts -->
+  <div class="hex-wrapper">
+    <div class="hex-border"></div>
+    <div class="hexagon"></div>
+  </div>
+
 </div>
 
 <div class="results" id="results"></div>
