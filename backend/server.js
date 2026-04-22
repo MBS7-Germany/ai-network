@@ -87,12 +87,10 @@ Welche ist besser? (nur 1 oder 2)
       })
     });
 
-    const raw = judgeData.choices?.[0]?.message?.content || "";
-const decision = raw.includes("1") ? "1" : "2";
-    // Scores setzen
-    results[0].score = decision === "1" ? 1 : 0;
-    results[1].score = decision === "2" ? 1 : 0;
+    const judgeData = await judge.json();
 
+const raw = judgeData.choices?.[0]?.message?.content || "";
+const decision = raw.includes("1") ? "1" : "2";
     // sortieren
     results.sort((a, b) => b.score - a.score);
 
