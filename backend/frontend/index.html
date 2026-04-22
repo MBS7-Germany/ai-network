@@ -142,13 +142,15 @@ async function search() {
     resultsDiv.innerHTML = "";
 
     data.results.forEach((r, i) => {
-      resultsDiv.innerHTML += `
-        <div class="card">
-          <strong>${i + 1}. ${r.model}</strong>
-          <p>${r.answer}</p>
-        </div>
-      `;
-    });
+  const badge = i === 0 ? "🥇 BESTE ANTWORT" : "";
+
+  resultsDiv.innerHTML += `
+    <div class="card">
+      <strong>${i + 1}. ${r.model} ${badge}</strong>
+      <p>${r.answer}</p>
+    </div>
+  `;
+});
 
   } catch(e) {
     document.getElementById("results").innerText = "Fehler: " + e.message;
