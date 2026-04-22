@@ -15,6 +15,17 @@ body {
   justify-content: center;
   height: 100vh;
 }
+  .card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.card:first-child {
+  font-size: 18px;
+  background: #ffffff;
+}
 
 /* HEADER */
 .title {
@@ -141,12 +152,31 @@ async function search() {
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
 
-    data.results.forEach((r, i) => {
-  const badge = i === 0 ? "🥇 BESTE ANTWORT" : "";
+    const resultsDiv = document.getElementById("results");
+resultsDiv.innerHTML = "";
 
+// Frage anzeigen
+resultsDiv.innerHTML += `
+  <div style="margin-bottom:20px; font-size:18px;">
+    🔍 <b>${query}</b>
+  </div>
+`;
+
+// 🥇 Beste Antwort
+const best = data.results[0];
+
+resultsDiv.innerHTML += `
+  <div class="card" style="border:2px solid #1877f2;">
+    <strong>🥇 BESTE ANTWORT (${best.model})</strong>
+    <p>${best.answer}</p>
+  </div>
+`;
+
+// 🔽 Weitere Antworten
+data.results.slice(1).forEach((r, i) => {
   resultsDiv.innerHTML += `
     <div class="card">
-      <strong>${i + 1}. ${r.model} ${badge}</strong>
+      <strong>${i + 2}. ${r.model}</strong>
       <p>${r.answer}</p>
     </div>
   `;
