@@ -45,60 +45,85 @@ app.post("/search", async (req, res) => {
 
     // Antworten sammeln
     const results = [
-      {
-        model: "OpenAI Normal",
-        answer: d1.choices?.[0]?.message?.content || "Keine Antwort"
-      },
-      {
-        model: "OpenAI Fast",
-        answer: d2.choices?.[0]?.message?.content || "Keine Antwort"
-      }
-    ];
+  {
+    model: "OpenAI Normal",
+    answer: d1.choices?.[0]?.message?.content || "Keine Antwort"
+  },
+  {
+    model: "OpenAI Fast",
+    answer: d2.choices?.[0]?.message?.content || "Keine Antwort"
+  }
+];
+
+// 🔥 3. Antwort hinzufügen
+const r3 = await fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "user", content: "Erkläre einfach: " + query }
+    ]
+  })
+});
+
+const d3 = await r3.json();
+
+results.push({
+  model: "OpenAI Simple",
+  answer: d3.choices?.[0]?.message?.content || "Keine Antwort"
+});
 
     // 🔥 AI bewertet die Antworten
     const judge = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: "Welche Antwort ist die beste? Antworte nur mit 1, 2 oder 3."
       },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "Bewerte welche Antwort besser ist. Antworte nur mit 1 oder 2."
-          },
-          {
-            role: "user",
-            content: `
+      {
+        role: "user",
+        content: `
 Frage: ${query}
 
-Antwort 1:
+1:
 ${results[0].answer}
 
-Antwort 2:
+2:
 ${results[1].answer}
 
-Welche ist besser? (nur 1 oder 2)
-            `
-          }
-        ]
-      })
-    });
+3:
+${results[2].answer}
 
-    const judgeData = await judge.json();
-
-const raw = judgeData.choices?.[0]?.message?.content || "";
-const decision = raw.includes("1") ? "1" : "2";
-    // sortieren
-    results.sort((a, b) => b.score - a.score);
-
-    res.json({ results });
-
-  } catch (e) {
-    res.json({ error: e.message });
-  }
+Welche ist am besten?
+        `
+      }
+    ]
+  })
 });
 
-app.listen(10000, () => console.log("Server läuft"));
+const judgeData = await judge.json();
+const raw = judgeData.choices?.[0]?.message?.content || "";
+
+// Gewinner bestimmen
+let winner = 0;
+if (raw.includes("2")) winner = 1;
+if (raw.includes("3")) winner = 2;
+
+// Score setzen
+results.forEach((r, i) => {
+  r.score = i === winner ? 1 : 0;
+});
+
+// sortieren
+results.sort((a, b) => b.score - a.score);
