@@ -87,9 +87,8 @@ Welche ist besser? (nur 1 oder 2)
       })
     });
 
-    const judgeData = await judge.json();
-    const decision = judgeData.choices?.[0]?.message?.content?.trim();
-
+    const raw = judgeData.choices?.[0]?.message?.content || "";
+const decision = raw.includes("1") ? "1" : "2";
     // Scores setzen
     results[0].score = decision === "1" ? 1 : 0;
     results[1].score = decision === "2" ? 1 : 0;
