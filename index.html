@@ -141,7 +141,13 @@ async function search() {
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
 
-    data.results.forEach((r, i) => {
+    if (!data.results) {
+  document.getElementById("results").innerText =
+    "Fehler: " + (data.error || "Keine Daten");
+  return;
+}
+
+data.results.forEach((r, i) => {
       resultsDiv.innerHTML += `
         <div class="card">
           <strong>${i + 1}. ${r.model}</strong>
