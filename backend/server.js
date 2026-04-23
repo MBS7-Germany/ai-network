@@ -105,7 +105,7 @@ app.post("/search", async (req, res) => {
     });
 
     const summaryData = await summaryRes.json();
-    const summary = summaryData.choices?.[0]?.message?.content || "";
+    const summary = summaryData.choices?.[0]?.message?.content || "Keine Zusammenfassung verfügbar";
 
     // 🔥 Antwort zurückgeben
     res.json({ results, summary });
