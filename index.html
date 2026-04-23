@@ -142,15 +142,42 @@ async function search() {
     resultsDiv.innerHTML = "";
 
     if (!data.results) {
-  document.getElementById("results").innerText =
-    "Fehler: " + (data.error || "Keine Daten");
-  return;
-}
+      resultsDiv.innerText = "Fehler: " + (data.error || "Keine Daten");
+      return;
+    }
 
-data.results.forEach((r, i) => {
+    // 🔍 Frage anzeigen
+    resultsDiv.innerHTML += `
+      <div style="margin-bottom:20px; font-size:18px;">
+        🔍 <b>${query}</b>
+      </div>
+    `;
+
+    // ⚡ Zusammenfassung anzeigen
+    if (data.summary) {
+      resultsDiv.innerHTML += `
+        <div class="card" style="background:#e7f3ff;">
+          <strong>⚡ Kurz erklärt</strong>
+          <p>${data.summary}</p>
+        </div>
+      `;
+    }
+
+    // 🥇 Beste Antwort
+    const best = data.results[0];
+
+    resultsDiv.innerHTML += `
+      <div class="card" style="border:2px solid #1877f2;">
+        <strong>🥇 BESTE ANTWORT (${best.model})</strong>
+        <p>${best.answer}</p>
+      </div>
+    `;
+
+    // 🔽 Weitere Antworten
+    data.results.slice(1).forEach((r, i) => {
       resultsDiv.innerHTML += `
         <div class="card">
-          <strong>${i + 1}. ${r.model}</strong>
+          <strong>${i + 2}. ${r.model}</strong>
           <p>${r.answer}</p>
         </div>
       `;
